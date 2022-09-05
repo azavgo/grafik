@@ -1,47 +1,23 @@
-use ppm::*; 
+mod grafik_error;
+use grafik_error::GrafikError;
 
-#[derive(Debug)]
-pub enum GrafikError { 
-    PPMError(PPMError),  
-}
-
-impl From<PPMError> for GrafikError {
-    fn from(error: PPMError) -> Self {
-        GrafikError::PPMError(error)
-    }
-}
-
-pub struct Point {
-    x: usize, 
-    y: usize, 
-    colour: Colour, 
-}
-
-impl Point {
-    pub fn new(x: usize, y: usize, colour: Colour) -> Self {
-        Self {
-            x: x, 
-            y: y, 
-            colour: colour, 
-        }
-    }
-
-    pub fn x(self: &Self) -> &usize {
-        &self.x
-    }
-
-    pub fn y(self: &Self) -> &usize {
-        &self.y
-    }
-
-    pub fn colour(self: &Self) -> &Colour {
-        &self.colour
-    }
-}
+mod grafik_lib;
+use grafik_lib::*;
 
 fn main() -> Result<(), GrafikError>{
-    let background = Colour::new(255, 0, 0);
-    let canvas = PPMP3::new(800, 600);  
-    canvas.file_p3("test_01", background)?;         
+    let background = Colour::new(255, 255, 255, 1.0);
+    let point_colour = Colour::new(0, 0, 0, 1.0); 
+    let canvas = Canvas::new(50, 50, &background); 
+    let mut image = canvas.image_init();  
+    let mut point = Point::new(0, 0, &point_colour); 
+/*
+    for _j in canvas.height()/2 .. *canvas.height() {
+        for _i in canvas.width()/2 .. *canvas.width() {
+            point = Point::new(_i, _j, &point_colour);
+            image = point.add(&canvas, image);
+        }
+    }
+ */
+    canvas.file_ppm3("test_01", image)?;         
     Ok(())
 }

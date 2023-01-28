@@ -13,7 +13,7 @@
     [dependencies]
     grafik = {git = "https://github.com/azavgo/grafik", branch = "main"}
 ```
-2. Create and print a complex number:  
+2. Creates a canvas and print it to an image file:  
 ```Rust
     use grafik::*;
 

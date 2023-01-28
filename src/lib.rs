@@ -1,9 +1,6 @@
 use std::fs::File; 
 use std::io::{BufWriter, Write};
 
-mod grafik_error;
-use grafik_error::GrafikError;
-
 pub struct Colour {
     r: u8, 
     g: u8, 
@@ -81,7 +78,7 @@ impl Canvas {
 }
 
 pub trait CanvasAdd <'a>{
-    fn add(self: &'a Self, canvas: &'a mut Canvas) -> &'a Canvas; 
+    fn add(self: &'a Self, canvas: Canvas) -> Canvas; 
 }
 
 pub struct Point <'a>{
@@ -111,14 +108,26 @@ impl<'a> Point <'a> {
         &self.c
     }
 }
-/*
-impl<'a> CanvasAdd for Point <'a> {
-    fn add(self: &Self, canvas: &'a mut Canvas) -> &Canvas {
-        canvas.image[self.x() + canvas.width() * self.y()] = format!("\n{}", self.colour().colour_string()); 
+
+impl<'a> CanvasAdd <'a> for Point <'a> {
+    fn add(self: &Self, mut canvas: Canvas) -> Canvas {
+        let c = self.x() + canvas.width() * self.y();
+        canvas.image[c] = format!("\n{}", self.colour().colour_string()); 
         canvas
     }
 }
-*/
+ 
+#[derive(Debug)]
+pub enum GrafikError { 
+    IOError(std::io::Error),  
+}
+
+impl From<std::io::Error> for GrafikError {
+    fn from(error: std::io::Error) -> Self {
+        GrafikError::IOError(error)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -132,9 +141,9 @@ mod tests {
 
     #[test]
     fn test_canvas_file_ppm3_01() -> Result<(), GrafikError> {
-        let colour = Colour::new(22, 132, 89, 0.3);
+        let colour = Colour::new(145, 12, 56, 0.3);
         let canvas = Canvas::new(800, 600, &colour); 
-        canvas.file_ppm3("test_canvas_file_ppm3_01")?;
+        canvas.file_ppm3("test_canvas_file_ppm3_02")?;
         Ok(())
     }
 }

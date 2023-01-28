@@ -13,7 +13,7 @@
     [dependencies]
     grafik = {git = "https://github.com/azavgo/grafik", branch = "main"}
 ```
-2. Creates a canvas and print it to an image file:  
+2. Creates a canvas and prints it to an image file:  
 ```Rust
     use grafik::*;
 
